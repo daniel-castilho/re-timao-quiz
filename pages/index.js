@@ -1,9 +1,13 @@
-import styled from 'styled-components'
-import db from '../db.json'
-import Widget from '../src/components/Widget'
-import QuizBackground from '../src/components/QuizBackground'
-import Footer from '../src/components/Footer'
-import GitHubCorner from '../src/components/GitHubCorner'
+import React from 'react';
+import styled from 'styled-components';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+import db from '../db.json';
+import Widget from '../src/components/Widget';
+import QuizBackground from '../src/components/QuizBackground';
+import Footer from '../src/components/Footer';
+import GitHubCorner from '../src/components/GitHubCorner';
 
 // const BackgroundImage = styled.div`
 //   background-image: url(${db.bg});
@@ -23,18 +27,40 @@ export const QuizContainer = styled.div`
   }
 `;
 
-
-
 export default function Home() {
+  const router = useRouter();
+  const [name, setName] = React.useState('');
+
   return (
     <QuizBackground backgroundImage={db.bg}>
+      <Head>
+        <title>Timão Quiz</title>
+      </Head>
       <QuizContainer>
         <Widget>
           <Widget.Header>
             <h1>The Legend of Zelda</h1>
           </Widget.Header>
           <Widget.Content>
-            <p>lorem ipsom lorem</p>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              // router manda para a próxima página
+              router.push(`/quiz?name=${name}`);
+            }}
+            >
+              <input
+                onChange={(infosDoEvento) => {
+                  // Estado
+                  setName(infosDoEvento.target.value);
+                }}
+                placeholder="Digite o seu nome"
+              />
+              <button type="submit" disabled={name.length === 0}>
+                Jogar
+                {' '}
+                {name}
+              </button>
+            </form>
           </Widget.Content>
         </Widget>
 
@@ -51,5 +77,5 @@ export default function Home() {
 
       <GitHubCorner projectUrl="https://github.com/daniel-castilho" />
     </QuizBackground>
-  )
+  );
 }
